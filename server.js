@@ -47,22 +47,62 @@ function isAdmin(req) {
 
 const num = (v, min, max) => typeof v === 'number' && v >= min && v <= max;
 
+function record(token, lat, lng, acc) {
+  const s = sellers[token];
+  if (!s) return null;
+  const point = { lat, lng, acc: num(acc, 0, 1e6) ? acc : null, ts: Date.now() };
+  s.last = point;
+  s.trail = (s.trail || []).concat([[lat, lng, point.ts]]).slice(-MAX_TRAIL);
+  save();
+  return s;
+}
+
+// Traccar Client: OsmAnd protocol (query string / form) or the newer JSON body
+function parseTraccar(url, body) {
+  const q = Object.fromEntries(url.searchParams);
+  const f = typeof body === 'string' ? Object.fromEntries(new URLSearchParams(body)) : {};
+  const j = body && typeof body === 'object' ? body : {};
+  const c = j.location && j.location.coords;
+  const get = k => q[k] ?? f[k];
+  return {
+    id: String(get('id') ?? j.device_id ?? ''),
+    lat: parseFloat(get('lat') ?? (c && c.latitude)),
+    lng: parseFloat(get('lon') ?? (c && c.longitude)),
+    acc: parseFloat(get('accuracy') ?? get('hdop') ?? (c && c.accuracy))
+  };
+}
+
+function readRaw(req) {
+  return new Promise((resolve, reject) => {
+    let data = '';
+    req.on('data', c => { data += c; if (data.length > 1e5) req.destroy(); });
+    req.on('end', () => resolve(data));
+    req.on('error', reject);
+  });
+}
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
   const p = url.pathname;
 
   try {
+    // Traccar Client reports to the server root (or /traccar)
+    if ((p === '/' || p === '/traccar') && (req.method === 'POST' || url.searchParams.has('lat'))) {
+      const raw = req.method === 'POST' ? await readRaw(req) : '';
+      let body = raw;
+      try { body = JSON.parse(raw); } catch {}
+      const t = parseTraccar(url, body);
+      if (!num(t.lat, -90, 90) || !num(t.lng, -180, 180)) return send(res, 400, { error: 'datos inválidos' });
+      return record(t.id, t.lat, t.lng, t.acc) ? send(res, 200, { ok: true }) : send(res, 404, { error: 'id desconocido' });
+    }
+
     // Seller sends position
     let m = p.match(/^\/api\/ping\/([a-f0-9]{16})$/);
     if (m && req.method === 'POST') {
-      const s = sellers[m[1]];
-      if (!s) return send(res, 404, { error: 'link inválido' });
+      if (!sellers[m[1]]) return send(res, 404, { error: 'link inválido' });
       const b = await readBody(req);
       if (!num(b.lat, -90, 90) || !num(b.lng, -180, 180)) return send(res, 400, { error: 'datos inválidos' });
-      const point = { lat: b.lat, lng: b.lng, acc: num(b.acc, 0, 1e6) ? b.acc : null, ts: Date.now() };
-      s.last = point;
-      s.trail = (s.trail || []).concat([[point.lat, point.lng, point.ts]]).slice(-MAX_TRAIL);
-      save();
+      const s = record(m[1], b.lat, b.lng, b.acc);
       return send(res, 200, { ok: true, name: s.name });
     }
 

@@ -15,6 +15,19 @@ Variables: `ADMIN_KEY` (obligatoria), `PORT`, `DATA_FILE` (por defecto `data.jso
 
 Requiere HTTPS en producción (el navegador solo da ubicación en sitios seguros). El servidor guarda datos en un archivo, así que necesita disco persistente (Render, Railway, Fly, VPS).
 
-## Limitación
+## Traccar Client (segundo plano)
+
+Cada vendedor instala [Traccar Client](https://www.traccar.org/client/) (Android/iOS, gratis) y configura:
+- **URL del servidor:** la URL de tu despliegue (ej. `https://geo.tudominio.com`)
+- **ID del dispositivo:** el ID que muestra el panel ("Copiar ID")
+- Permiso de ubicación "Siempre" y activar el servicio.
+
+Envía en segundo plano aunque salga de la app. El servidor acepta el protocolo OsmAnd (GET/POST en `/`).
+
+## Alternativa sin instalar
+
+El link `/s/<token>` funciona desde el navegador, pero solo mientras la página está abierta y la pantalla encendida.
+
+## Limitación del link web
 
 Sin instalar app, la ubicación solo se envía mientras la página está abierta y la pantalla encendida (se usa Wake Lock). Si el vendedor bloquea el teléfono o cambia de app, se detiene.

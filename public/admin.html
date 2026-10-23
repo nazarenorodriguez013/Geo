@@ -23,6 +23,8 @@
 <body>
 <aside>
   <div class="add"><input id="name" placeholder="Nombre del vendedor"><button id="add">Agregar</button></div>
+  <details style="margin-bottom:12px"><summary>Configurar Traccar Client</summary>
+    <small>En la app del vendedor: <b>URL del servidor</b> = <code id="srv"></code>, <b>ID del dispositivo</b> = el ID de abajo, frecuencia 30 s, y permitir ubicación "Siempre".</small></details>
   <div id="list"></div>
 </aside>
 <div id="map"></div>
@@ -69,10 +71,12 @@ async function refresh() {
     div.className = 'row';
     div.innerHTML = `<b>${esc(s.name)}</b><small class="${live ? 'live' : 'stale'}">${
       s.last ? (live ? '● en línea · ' : '○ ') + ago(s.last.ts) : 'sin ubicación aún'}</small>
-      <div class="acts"><button data-a="copy">Copiar link</button><button data-a="del">Borrar</button></div>`;
+      <div class="acts"><button data-a="id">Copiar ID</button><button data-a="copy">Copiar link</button><button data-a="del">Borrar</button></div>`;
     div.onclick = e => {
       const a = e.target.dataset.a;
-      if (a === 'copy') {
+      if (a === 'id') {
+        navigator.clipboard.writeText(s.token).then(() => e.target.textContent = '¡Copiado!', () => prompt('ID:', s.token));
+      } else if (a === 'copy') {
         const link = `${location.origin}/s/${s.token}`;
         navigator.clipboard.writeText(link).then(() => e.target.textContent = '¡Copiado!', () => prompt('Link:', link));
       } else if (a === 'del') {
@@ -96,6 +100,7 @@ $('add').onclick = async () => {
   $('name').value = '';
   refresh();
 };
+$('srv').textContent = location.origin;
 refresh();
 setInterval(refresh, 10000);
 </script>
