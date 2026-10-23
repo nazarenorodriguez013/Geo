@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compartir ubicación</title>
+<style>
+  body{font-family:system-ui,sans-serif;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f5f7;color:#111}
+  main{max-width:360px;padding:24px;text-align:center}
+  button{font-size:1.1rem;padding:14px 24px;border:0;border-radius:10px;background:#16a34a;color:#fff;width:100%}
+  button:disabled{background:#9ca3af}
+  #status{margin-top:18px;color:#444;min-height:3em}
+  .ok{color:#16a34a}.err{color:#dc2626}
+</style>
+</head>
+<body>
+<main>
+  <h2 id="hello">Hola</h2>
+  <p>Toca el botón y permite el acceso a tu ubicación. Mantén esta pantalla abierta mientras trabajas.</p>
+  <button id="go">Compartir mi ubicación</button>
+  <div id="status"></div>
+</main>
+<script>
+const token = location.pathname.split('/').pop();
+const $ = id => document.getElementById(id);
+const status = (t, c) => { $('status').textContent = t; $('status').className = c || ''; };
+let last = null, lastSent = 0, wake = null;
+
+fetch('/api/me/' + token).then(r => r.ok ? r.json() : Promise.reject())
+  .then(d => $('hello').textContent = 'Hola, ' + d.name)
+  .catch(() => { status('Link inválido', 'err'); $('go').disabled = true; });
+
+async function keepAwake() {
+  try { wake = await navigator.wakeLock.request('screen'); } catch {}
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && last) keepAwake();
+});
+
+async function send(pos) {
+  const { latitude: lat, longitude: lng, accuracy: acc } = pos.coords;
+  try {
+    const r = await fetch('/api/ping/' + token, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lat, lng, acc })
+    });
+    if (!r.ok) throw 0;
+    lastSent = Date.now();
+    status('Ubicación compartida ✓ ' + new Date().toLocaleTimeString(), 'ok');
+  } catch { status('Sin conexión, reintentando…', 'err'); }
+}
+
+$('go').onclick = () => {
+  if (!navigator.geolocation) return status('Tu navegador no soporta ubicación', 'err');
+  $('go').disabled = true;
+  $('go').textContent = 'Compartiendo…';
+  status('Obteniendo ubicación…');
+  keepAwake();
+  navigator.geolocation.watchPosition(pos => {
+    last = pos;
+    if (Date.now() - lastSent > 20000) send(pos);
+  }, e => {
+    $('go').disabled = false;
+    $('go').textContent = 'Compartir mi ubicación';
+    status(e.code === 1 ? 'Permiso denegado. Actívalo en los ajustes del navegador.' : 'No se pudo obtener la ubicación', 'err');
+  }, { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 });
+  setInterval(() => { if (last && Date.now() - lastSent > 30000) send(last); }, 15000);
+};
+</script>
+</body>
+</html>
