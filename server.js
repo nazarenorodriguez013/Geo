@@ -140,6 +140,19 @@ const server = http.createServer(async (req, res) => {
       return send(res, 404, { error: 'no encontrado' });
     }
 
+    // Static images
+    m = p.match(/^\/img\/([a-z0-9_-]+\.(?:jpg|jpeg|png|webp))$/i);
+    if (m) {
+      const imgPath = path.join(__dirname, 'public', 'img', m[1]);
+      const ext = path.extname(imgPath).slice(1).toLowerCase();
+      const type = ext === 'jpg' ? 'image/jpeg' : `image/${ext}`;
+      return fs.access(imgPath, fs.constants.R_OK, err => {
+        if (err) return send(res, 404, { error: 'no encontrado' });
+        res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'public, max-age=86400' });
+        fs.createReadStream(imgPath).pipe(res);
+      });
+    }
+
     // Pages
     const file = /^\/s\/[a-f0-9]{16}$/.test(p) ? 'seller.html'
       : p === '/' || p === '/admin' ? 'admin.html' : null;

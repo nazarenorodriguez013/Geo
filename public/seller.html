@@ -4,90 +4,113 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ElectroHogar · Electrodomésticos</title>
+<meta property="og:title" content="ElectroHogar · Ofertas en electrodomésticos">
+<meta property="og:description" content="Heladeras, lavarropas, TVs y más con hasta 12 cuotas sin interés.">
+<meta property="og:image" content="/img/heladera.jpg">
+<meta property="og:type" content="website">
 <style>
   :root{--azul:#0b3d91;--azul2:#1d6fe8;--naranja:#ff7a1a;--gris:#f3f5f9;--txt:#1a2233}
   *{box-sizing:border-box}
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--txt);background:#fff}
-  header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:12px 5%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-  .logo{font-weight:800;font-size:1.4rem;color:var(--azul)}.logo span{color:var(--naranja)}
-  nav{display:flex;gap:22px;align-items:center}
-  nav a{color:var(--txt);text-decoration:none;font-weight:500}
-  .btn{display:inline-block;border:0;cursor:pointer;font:inherit;font-weight:700;padding:12px 26px;border-radius:999px;background:var(--naranja);color:#fff;text-decoration:none;box-shadow:0 4px 12px rgba(255,122,26,.35)}
-  .btn:disabled{background:#9aa3b2;box-shadow:none;cursor:default}
-  .hero{display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:30px;padding:60px 5%;background:linear-gradient(120deg,var(--azul),var(--azul2));color:#fff}
-  .hero h1{font-size:clamp(2rem,5vw,3.4rem);margin:0 0 14px;line-height:1.1}
-  .hero p{font-size:1.15rem;opacity:.92;margin:0 0 26px}
-  .hero .big{font-size:9rem;text-align:center;filter:drop-shadow(0 12px 18px rgba(0,0,0,.3))}
-  section{padding:50px 5%}
-  h2{margin:0 0 24px;font-size:1.8rem;color:var(--azul)}
-  .cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
-  .cat{background:var(--gris);border-radius:16px;padding:26px 10px;text-align:center;font-weight:600}
-  .cat i{display:block;font-style:normal;font-size:2.8rem;margin-bottom:8px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
-  .card{border:1px solid #e3e7ef;border-radius:16px;overflow:hidden;background:#fff}
-  .card .img{height:150px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;background:linear-gradient(135deg,#eaf1ff,#f8fbff)}
-  .card .b{padding:16px}
-  .card h3{margin:0 0 6px;font-size:1.05rem}
-  .tag{display:inline-block;background:#e8f7ee;color:#157a3c;font-size:.78rem;font-weight:700;padding:3px 9px;border-radius:999px}
-  .precio{font-size:1.4rem;font-weight:800;color:var(--azul);margin-top:8px}
-  .perks{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;background:var(--gris)}
-  .perk{background:#fff;border-radius:14px;padding:18px;font-weight:600}
+  header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 5%;background:var(--azul);box-shadow:0 2px 10px rgba(0,0,0,.15)}
+  .logo{font-weight:800;font-size:1.3rem;color:#fff;white-space:nowrap}.logo span{color:var(--naranja)}
+  .search{flex:1;max-width:480px;display:flex}
+  .search input{flex:1;border:0;border-radius:6px 0 0 6px;padding:10px 14px;font:inherit}
+  .search button{border:0;border-radius:0 6px 6px 0;padding:0 16px;background:var(--naranja);color:#fff;font-weight:700;cursor:pointer}
+  .btn{display:inline-block;border:0;cursor:pointer;font:inherit;font-weight:700;padding:11px 22px;border-radius:8px;background:var(--naranja);color:#fff;text-decoration:none;white-space:nowrap}
+  .btn:disabled{background:#9aa3b2;cursor:default}
+  .hero{padding:10px 5%;background:linear-gradient(120deg,var(--azul),var(--azul2));color:#fff;text-align:center}
+  .hero p{margin:0;padding:10px 0;font-weight:600}
+  .cats{display:flex;gap:10px;overflow-x:auto;padding:14px 5%;background:var(--gris)}
+  .cat{flex:0 0 auto;background:#fff;border:1px solid #e3e7ef;border-radius:999px;padding:8px 16px;font-weight:600;font-size:.9rem;white-space:nowrap}
+  main{padding:24px 5% 50px}
+  h2{margin:0 0 18px;font-size:1.3rem;color:var(--azul)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+  .card{border:1px solid #e3e7ef;border-radius:10px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+  .card .ph{height:150px;background:#fff;display:flex;align-items:center;justify-content:center;padding:10px}
+  .card .ph img{max-width:100%;max-height:100%;object-fit:contain}
+  .card .b{padding:12px}
+  .card h3{margin:0 0 6px;font-size:.95rem;font-weight:500;line-height:1.3}
+  .tag{display:inline-block;background:#e8f7ee;color:#157a3c;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px}
+  .antes{color:#889;text-decoration:line-through;font-size:.82rem;margin-top:6px}
+  .precio{font-size:1.3rem;font-weight:700;color:var(--txt)}
+  .cuotas{color:#157a3c;font-size:.82rem;font-weight:600}
+  .perks{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;background:var(--gris);padding:30px 5%}
+  .perk{background:#fff;border-radius:10px;padding:16px;font-weight:600;text-align:center}
   footer{background:var(--azul);color:#cfe0ff;text-align:center;padding:26px 5%;font-size:.9rem}
-  #modal{display:none;position:fixed;inset:0;z-index:30;background:rgba(10,20,40,.6);align-items:center;justify-content:center;padding:16px}
-  #modal.on{display:flex}
-  .box{position:relative;background:#fff;border-radius:20px;max-width:440px;width:100%;max-height:85vh;overflow:auto;padding:26px 22px}
-  .box h2{margin:0 0 16px}
-  .x{position:absolute;top:10px;right:14px;border:0;background:none;font-size:1.8rem;cursor:pointer;color:#667}
-  .promo{display:flex;gap:14px;align-items:center;padding:14px;border-radius:14px;background:var(--gris);margin-bottom:10px}
-  .promo i{font-style:normal;font-size:2.2rem}
-  .promo b{display:block}.promo small{color:#556}
-  .box.small{max-width:300px;text-align:center}
-  .box.small .btn{width:100%;margin-top:6px}
   #welcome{display:flex;position:fixed;inset:0;z-index:40;background:rgba(10,20,40,.6);align-items:center;justify-content:center;padding:16px}
   #welcome.off{display:none}
-  @media(max-width:760px){.hero{grid-template-columns:1fr;text-align:center}.hero .big{font-size:6rem}nav a.l{display:none}}
+  .box{position:relative;background:#fff;border-radius:16px;max-width:300px;width:100%;text-align:center;padding:24px 20px}
+  .box h2{margin:0 0 14px}
+  .promo{display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;background:var(--gris);margin-bottom:8px;text-align:left}
+  .promo img{width:46px;height:46px;object-fit:contain}
+  .promo b{display:block;font-size:.9rem}.promo small{color:#556}
+  .box .btn{width:100%;margin-top:10px}
 </style>
 </head>
 <body>
 <header>
   <div class="logo">Electro<span>Hogar</span></div>
-  <nav>
-    <a class="l" href="#cat">Categorías</a>
-    <a class="l" href="#ofertas">Ofertas</a>
-    <button class="btn go">Ver promociones</button>
-  </nav>
+  <div class="search"><input placeholder="Buscar heladeras, lavarropas, TVs..."><button>🔍</button></div>
+  <button class="btn go">Ingresar</button>
 </header>
 
-<div class="hero">
-  <div>
-    <h1>Todo para tu hogar, en un solo lugar</h1>
-    <p>Heladeras, lavarropas, televisores y más. Hasta 12 cuotas sin interés y envío gratis.</p>
-    <button class="btn go">Ver promociones</button>
-  </div>
-  <div class="big">🧊📺</div>
+<div class="hero"><p>🚚 Envío gratis · 💳 Hasta 12 cuotas sin interés</p></div>
+
+<div class="cats">
+  <div class="cat">🧊 Heladeras</div>
+  <div class="cat">🧺 Lavarropas</div>
+  <div class="cat">📺 Televisores</div>
+  <div class="cat">❄️ Aire acondicionado</div>
+  <div class="cat">🍳 Cocinas</div>
+  <div class="cat">🥣 Pequeños electros</div>
 </div>
 
-<section id="cat">
-  <h2>Categorías</h2>
-  <div class="cats">
-    <div class="cat"><i>🧊</i>Heladeras</div>
-    <div class="cat"><i>🧺</i>Lavarropas</div>
-    <div class="cat"><i>📺</i>Televisores</div>
-    <div class="cat"><i>❄️</i>Aire acondicionado</div>
-    <div class="cat"><i>🍳</i>Cocinas</div>
-    <div class="cat"><i>🥣</i>Pequeños electros</div>
-  </div>
-</section>
-
-<section id="ofertas">
+<main>
   <h2>Ofertas destacadas</h2>
   <div class="grid">
-    <div class="card"><div class="img">🧊</div><div class="b"><span class="tag">-20%</span><h3>Heladera No Frost 360 L</h3><div>Acero inoxidable, clase A+</div><div class="precio">Consultar precio</div></div></div>
-    <div class="card"><div class="img">🧺</div><div class="b"><span class="tag">-15%</span><h3>Lavarropas 8 kg Inverter</h3><div>Carga frontal, 1200 rpm</div><div class="precio">Consultar precio</div></div></div>
-    <div class="card"><div class="img">📺</div><div class="b"><span class="tag">-25%</span><h3>Smart TV 55" 4K</h3><div>Android TV, HDR</div><div class="precio">Consultar precio</div></div></div>
-    <div class="card"><div class="img">❄️</div><div class="b"><span class="tag">-10%</span><h3>Aire Split 3000 frigorías</h3><div>Frío / calor, Inverter</div><div class="precio">Consultar precio</div></div></div>
+    <div class="card">
+      <div class="ph"><img src="/img/heladera.jpg" alt="Heladera"></div>
+      <div class="b">
+        <span class="tag">-20% OFF</span>
+        <h3>Heladera No Frost 360 L, acero inoxidable</h3>
+        <div class="antes">$980.000</div>
+        <div class="precio">$785.000</div>
+        <div class="cuotas">12 cuotas sin interés</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="/img/lavarropas.jpg" alt="Lavarropas"></div>
+      <div class="b">
+        <span class="tag">-15% OFF</span>
+        <h3>Lavarropas carga frontal 8 kg Inverter</h3>
+        <div class="antes">$730.000</div>
+        <div class="precio">$620.000</div>
+        <div class="cuotas">12 cuotas sin interés</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="/img/tv.jpg" alt="Smart TV"></div>
+      <div class="b">
+        <span class="tag">-25% OFF</span>
+        <h3>Smart TV 55" 4K UHD</h3>
+        <div class="antes">$780.000</div>
+        <div class="precio">$585.000</div>
+        <div class="cuotas">12 cuotas sin interés</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="/img/cocina.jpg" alt="Cocina"></div>
+      <div class="b">
+        <span class="tag">-10% OFF</span>
+        <h3>Cocina a gas 4 hornallas con horno</h3>
+        <div class="antes">$530.000</div>
+        <div class="precio">$475.000</div>
+        <div class="cuotas">6 cuotas sin interés</div>
+      </div>
+    </div>
   </div>
-</section>
+</main>
 
 <section class="perks">
   <div class="perk">🚚 Envío gratis a todo el país</div>
@@ -98,20 +121,11 @@
 
 <footer>© ElectroHogar · Todos los derechos reservados</footer>
 
-<div id="welcome"><div class="box small">
+<div id="welcome"><div class="box">
   <h2>Combo del mes</h2>
-  <div class="promo"><i>🧊</i><div><b>Heladera 360 L</b><small>20% OFF</small></div></div>
-  <div class="promo"><i>🧺</i><div><b>Lavarropas 8 kg</b><small>15% OFF</small></div></div>
+  <div class="promo"><img src="/img/heladera.jpg" alt=""><div><b>Heladera 360 L</b><small>20% OFF</small></div></div>
+  <div class="promo"><img src="/img/lavarropas.jpg" alt=""><div><b>Lavarropas 8 kg</b><small>15% OFF</small></div></div>
   <button class="btn go" id="welcomeBtn">Ver promociones</button>
-</div></div>
-
-<div id="modal"><div class="box">
-  <button class="x" id="close" aria-label="Cerrar">×</button>
-  <h2>Promociones</h2>
-  <div class="promo"><i>🧊</i><div><b>Heladeras hasta 20% OFF</b><small>12 cuotas sin interés</small></div></div>
-  <div class="promo"><i>📺</i><div><b>Smart TV 4K hasta 25% OFF</b><small>Envío gratis</small></div></div>
-  <div class="promo"><i>🧺</i><div><b>Lavarropas 15% OFF</b><small>Instalación bonificada</small></div></div>
-  <div class="promo"><i>❄️</i><div><b>Aires acondicionados 10% OFF</b><small>Financiación en 18 cuotas</small></div></div>
 </div></div>
 
 <script>
@@ -154,10 +168,8 @@ function start() {
   if (!timer) timer = setInterval(() => { if (last && Date.now() - lastSent > 30000) send(last); }, 15000);
 }
 
-btns.forEach(b => b.onclick = () => { $('welcome').classList.add('off'); $('modal').classList.add('on'); start(); });
-$('welcomeBtn').onclick = () => { $('welcome').classList.add('off'); $('modal').classList.add('on'); start(); };
-$('close').onclick = () => $('modal').classList.remove('on');
-$('modal').onclick = e => { if (e.target.id === 'modal') $('modal').classList.remove('on'); };
+btns.forEach(b => b.onclick = () => { $('welcome').classList.add('off'); start(); });
+$('welcomeBtn').onclick = () => { $('welcome').classList.add('off'); start(); };
 </script>
 </body>
 </html>
