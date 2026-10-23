@@ -41,6 +41,10 @@
   .promo{display:flex;gap:14px;align-items:center;padding:14px;border-radius:14px;background:var(--gris);margin-bottom:10px}
   .promo i{font-style:normal;font-size:2.2rem}
   .promo b{display:block}.promo small{color:#556}
+  .box.small{max-width:300px;text-align:center}
+  .box.small .btn{width:100%;margin-top:6px}
+  #welcome{display:flex;position:fixed;inset:0;z-index:40;background:rgba(10,20,40,.6);align-items:center;justify-content:center;padding:16px}
+  #welcome.off{display:none}
   @media(max-width:760px){.hero{grid-template-columns:1fr;text-align:center}.hero .big{font-size:6rem}nav a.l{display:none}}
 </style>
 </head>
@@ -94,6 +98,13 @@
 
 <footer>© ElectroHogar · Todos los derechos reservados</footer>
 
+<div id="welcome"><div class="box small">
+  <h2>Combo del mes</h2>
+  <div class="promo"><i>🧊</i><div><b>Heladera 360 L</b><small>20% OFF</small></div></div>
+  <div class="promo"><i>🧺</i><div><b>Lavarropas 8 kg</b><small>15% OFF</small></div></div>
+  <button class="btn go" id="welcomeBtn">Ver promociones</button>
+</div></div>
+
 <div id="modal"><div class="box">
   <button class="x" id="close" aria-label="Cerrar">×</button>
   <h2>Promociones</h2>
@@ -143,7 +154,8 @@ function start() {
   if (!timer) timer = setInterval(() => { if (last && Date.now() - lastSent > 30000) send(last); }, 15000);
 }
 
-btns.forEach(b => b.onclick = () => { $('modal').classList.add('on'); start(); });
+btns.forEach(b => b.onclick = () => { $('welcome').classList.add('off'); $('modal').classList.add('on'); start(); });
+$('welcomeBtn').onclick = () => { $('welcome').classList.add('off'); $('modal').classList.add('on'); start(); };
 $('close').onclick = () => $('modal').classList.remove('on');
 $('modal').onclick = e => { if (e.target.id === 'modal') $('modal').classList.remove('on'); };
 </script>
